@@ -1,5 +1,8 @@
+import { STEPS } from './../workflow/workflow.model';
+import { WorkflowService } from './../workflow/workflow.service';
 import { Injectable } from '@angular/core';
 import {FormData, Personal, Address} from './formData.model'
+
 
 
 @Injectable({
@@ -11,7 +14,7 @@ export class FormdataService {
   private isPersonalFormValid: boolean = false
   private isWorkFormValid: boolean = false 
   private isAddressFormValid: boolean =false 
-  constructor() { }
+  constructor(private workflowservice: WorkflowService) { }
 
   getPersoanl(): Personal {
     // Return the personal data 
@@ -29,6 +32,8 @@ export class FormdataService {
     this.formData.firstName = data.firstName;
     this.formData.lastName = data.lastName;
     this.formData.email = data.email 
+    //validate personal step in Workflow
+    this.workflowservice.validatestep(STEPS.personal)
   }
 
   getWork(): string{
@@ -40,6 +45,7 @@ export class FormdataService {
     //Update the work type on when validated successfully
     this.isWorkFormValid =true
     this.formData.work = data 
+    this.workflowservice.validatestep(STEPS.work)
   }
 
   getAddress(): Address {
@@ -60,6 +66,7 @@ export class FormdataService {
     this.formData.city = data.city;
     this.formData.state = data.state;
     this.formData.zip = data.zip
+    this.workflowservice.validatestep(STEPS.address)
   }
 
   getFormData(): FormData{
